@@ -27,7 +27,7 @@ namespace L01_2020ZR601.Controllers
             List<pedidos> listadopedido = (from e in _restauranteContexto.pedidos
                                            select e).ToList();
 
-            if (listadopedido.Count == 0)
+            if (listadopedido.Count() == 0)
             {
                 return NotFound();
             }
