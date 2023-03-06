@@ -15,17 +15,13 @@ namespace L01_2020ZR601.Controllers
         {
             _restauranteContexto = restauranteContexto;
         }
-        /// <summary>
-        /// Endpoint que retorna el listado de los datos existentes
-        /// </summary>
-        /// <returns></returns>
+
         [HttpGet]
-        [Route("GetAll")]
-        public IActionResult Get()
+        [Route("Getplatos")]
+        public IActionResult Getplato()
         {
             List<platos> listadoplato = (from e in _restauranteContexto.platos
-                                           select e).ToList();
-
+                                         select e).ToList();
             if (listadoplato.Count() == 0)
             {
                 return NotFound();
@@ -33,33 +29,31 @@ namespace L01_2020ZR601.Controllers
 
             return Ok(listadoplato);
         }
-
-
         [HttpPost]
-        [Route("Add")]
-        public IActionResult Guardarplatos([FromBody] platos plato)
+        [Route("AddPlato")]
+
+        public IActionResult GuardarPlato([FromBody] platos plato)
         {
             try
             {
                 _restauranteContexto.platos.Add(plato);
                 _restauranteContexto.SaveChanges();
                 return Ok(plato);
-
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-
         }
 
         [HttpPut]
-        [Route("actualizar/{id}")]
-        public IActionResult ActualizarPedido(int id, [FromBody] platos platoModificar)
+        [Route("actualizarPlato/{id}")]
+
+        public IActionResult actualizarPlato(int id, [FromBody] platos platoModificar)
         {
             platos? platoActual = (from e in _restauranteContexto.platos
-                                     where e.platoId == id
-                                     select e).FirstOrDefault();
+                                   where e.platoId == id
+                                   select e).FirstOrDefault();
 
             if (platoActual == null)
             {
@@ -68,23 +62,22 @@ namespace L01_2020ZR601.Controllers
 
             platoActual.nombrePlato = platoModificar.nombrePlato;
             platoActual.precio = platoModificar.precio;
-            
+
 
             _restauranteContexto.Entry(platoActual).State = EntityState.Modified;
             _restauranteContexto.SaveChanges();
 
             return Ok(platoModificar);
-
         }
 
         [HttpDelete]
-        [Route("eliminar/{id}")]
+        [Route("eliminarPlato/{id}")]
 
-        public IActionResult Eliminarpedido(int id)
+        public IActionResult EliminarPlato(int id)
         {
             platos? plato = (from e in _restauranteContexto.platos
-                               where e.platoId == id
-                               select e).FirstOrDefault();
+                             where e.platoId == id
+                             select e).FirstOrDefault();
 
             if (plato == null)
             {
@@ -96,9 +89,25 @@ namespace L01_2020ZR601.Controllers
             _restauranteContexto.SaveChanges();
 
             return Ok(plato);
-
         }
-        
+
+        [HttpGet]
+        [Route("GetByprecio")]
+
+        public IActionResult Get(decimal precio)
+        {
+            List<platos> listadoplato = (from e in _restauranteContexto.platos
+                                         where e.precio < precio
+                                         select e).ToList();
+            if (listadoplato == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(listadoplato);
+        }
+
+
 
     }
 }

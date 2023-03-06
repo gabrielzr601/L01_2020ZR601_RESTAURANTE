@@ -5,7 +5,7 @@ namespace L01_2020ZR601.Models
     {
         [Key]
         public int motoristaId { get; set; }
-        public String? nombreMotorista { get; set; }
+        public String nombreMotorista { get; set; }
 
     }
 }

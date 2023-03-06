@@ -16,17 +16,12 @@ namespace L01_2020ZR601.Controllers
             _restauranteContexto = restauranteContexto;
         }
 
-        /// <summary>
-        /// Endpoint que retorna el listado de los datos existentes
-        /// </summary>
-        /// <returns></returns>
         [HttpGet]
         [Route("GetAll")]
         public IActionResult Get()
         {
             List<pedidos> listadopedido = (from e in _restauranteContexto.pedidos
                                            select e).ToList();
-
             if (listadopedido.Count() == 0)
             {
                 return NotFound();
@@ -34,29 +29,27 @@ namespace L01_2020ZR601.Controllers
 
             return Ok(listadopedido);
         }
-
-
         [HttpPost]
         [Route("Add")]
-        public IActionResult Guardarpedidos([FromBody] pedidos pedido)
+
+        public IActionResult Guardar([FromBody] pedidos pedido)
         {
             try
             {
                 _restauranteContexto.pedidos.Add(pedido);
                 _restauranteContexto.SaveChanges();
                 return Ok(pedido);
-
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-
         }
 
         [HttpPut]
         [Route("actualizar/{id}")]
-        public IActionResult ActualizarPedido(int id, [FromBody] pedidos pedidoModificar)
+
+        public IActionResult actualizar(int id, [FromBody] pedidos pedidoModificar)
         {
             pedidos? pedidoActual = (from e in _restauranteContexto.pedidos
                                      where e.pedidoId == id
@@ -77,13 +70,12 @@ namespace L01_2020ZR601.Controllers
             _restauranteContexto.SaveChanges();
 
             return Ok(pedidoModificar);
-
         }
 
         [HttpDelete]
         [Route("eliminar/{id}")]
 
-        public IActionResult Eliminarpedido(int id)
+        public IActionResult Eliminar(int id)
         {
             pedidos? pedido = (from e in _restauranteContexto.pedidos
                                where e.pedidoId == id
@@ -101,48 +93,37 @@ namespace L01_2020ZR601.Controllers
             return Ok(pedido);
         }
 
-        /// <summary>
-        /// EndPoint que retorna los registros de una tabla filtrados por cliente 
-        /// </summay>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpGet]
-        [Route("Find/{filtro}")]
-
-        public IActionResult BuscarPorCliente(int id)
+        [Route("GetById/{id}")]
+        public IActionResult Get(int id)
         {
             pedidos? pedido = (from e in _restauranteContexto.pedidos
-                               where e.clienteId ==id
+                               where e.clienteId == id
                                select e).FirstOrDefault();
+
             if (pedido == null)
             {
                 return NotFound();
             }
 
             return Ok(pedido);
-            
         }
-        /// <summary>
-        /// EndPoint que retorna los registros de una tabla filtrados por motoristas 
-        /// </summay>
-        /// <param name="id"></param>
-        /// <returns></returns>
 
         [HttpGet]
-        [Route("Find/{filtro}")]
+        [Route("GetMotorista/{id}")]
 
-        public IActionResult BuscarPorMotorista(int id)
+        public IActionResult Motorista(int id)
         {
             pedidos? pedido = (from e in _restauranteContexto.pedidos
                                where e.motoristaId == id
                                select e).FirstOrDefault();
+
             if (pedido == null)
             {
                 return NotFound();
             }
 
             return Ok(pedido);
-
         }
 
 
